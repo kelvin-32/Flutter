@@ -1,53 +1,91 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const CarrinhoApp());
-}
-
-class CarrinhoApp extends StatelessWidget {
-  const CarrinhoApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Carrinho de Compras',
-      theme: ThemeData(primarySwatch: Colors.teal),
-      home: const HomePage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  runApp(const MyApp());
 }
 
 class Produto {
   final String nome;
   final double preco;
   final String imagemUrl;
-
   Produto(this.nome, this.preco, this.imagemUrl);
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Carrinho de Compras',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const CarrinhoPage(),
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage> {
-  double total = 0.0;
+class CarrinhoPage extends StatefulWidget {
+  const CarrinhoPage({super.key});
 
+  @override
+  State<CarrinhoPage> createState() => _CarrinhoPageState();
+}
+
+class _CarrinhoPageState extends State<CarrinhoPage> {
   final List<Produto> produtos = [
-    Produto('Camiseta Vermelha', 29.99, 'https://placehold.co/150x100/FF0000/FFFFFF/png'),
-    Produto('Calça Amarela', 49.99, 'https://placehold.co/150x100/FFFF00/000000/png'),
-    Produto('Tênis Laranja', 89.99, 'https://placehold.co/150x100/FFA500/FFFFFF/png'),
-    Produto('Chapéu Bege', 19.99, 'https://placehold.co/150x100/F5DEB3/000000/png'),
-    Produto('Jaqueta Branca', 79.99, 'https://placehold.co/150x100/FFFFFF/000000/png'),
-    Produto('Botas Marrons', 99.99, 'https://placehold.co/150x100/6F4E37/FFFFFF/png'),
+    Produto(
+      'Maçã',
+      2.5,
+      'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=150&q=80',
+    ),
+    Produto(
+      'Banana',
+      1.8,
+      'https://media.istockphoto.com/id/959104928/pt/foto/banana.webp?a=1&b=1&s=612x612&w=0&k=20&c=HlFjkoCBPWRmUJNC1NVk8BeEIywZ-uEnGuCBIXX9BCA=',
+    ),
+    Produto(
+      'Laranja',
+      3.0,
+      'https://media.istockphoto.com/id/482078328/pt/foto/fundo-laranjado.webp?a=1&b=1&s=612x612&w=0&k=20&c=FB1dYJaP-iJc1JoEjhtR_u6bskV4JTlhiLuKz2zm7b0=',
+    ),
+    Produto(
+      'Pão',
+      4.5,
+      'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cCVDMyVBM298ZW58MHx8MHx8fDA%3D',
+    ),
+    Produto(
+      'Leite',
+      5.0,
+      'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGxlaXRlfGVufDB8fDB8fHww',
+    ),
+    Produto(
+      'Café',
+      6.2,
+      'https://plus.unsplash.com/premium_photo-1675435644687-562e8042b9db?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FmJUMzJUE5fGVufDB8fDB8fHww',
+    ),
   ];
 
-  void adicionarAoCarrinho(double preco) {
+  final List<Produto> carrinho = [];
+
+  double get total => carrinho.fold(0, (sum, item) => sum + item.preco);
+
+  void adicionarProduto(Produto produto) {
     setState(() {
-      total += preco;
+      carrinho.add(produto);
+    });
+  }
+
+  void removerProduto(Produto produto) {
+    setState(() {
+      carrinho.remove(produto);
+    });
+  }
+
+  void limparCarrinho() {
+    setState(() {
+      carrinho.clear();
     });
   }
 
@@ -56,60 +94,81 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carrinho de Compras'),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.builder(
-                  itemCount: produtos.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemBuilder: (context, index) {
-                    final produto = produtos[index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade400,
-                            blurRadius: 4,
-                            offset: const Offset(2, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Image.network(produto.imagemUrl, height: 80),
-                          Text(produto.nome, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('R\$ ${produto.preco.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green)),
-                          ElevatedButton(
-                            onPressed: () => adicionarAoCarrinho(produto.preco),
-                            child: const Text('Adicionar'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+              child: GridView.builder(
+                padding: const EdgeInsets.all(10),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 3 / 2,
                 ),
+                itemCount: produtos.length,
+                itemBuilder: (context, index) {
+                  final produto = produtos[index];
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(produto.nome,
+                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Image.network(produto.imagemUrl,
+                            height: 50, fit: BoxFit.cover),
+                        Text('R\$ ${produto.preco.toStringAsFixed(2)}'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => adicionarProduto(produto),
+                              child: const Text('Adicionar'),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: () => removerProduto(produto),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red),
+                              child: const Text('Remover'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
             Container(
               padding: const EdgeInsets.all(16),
-              color: Colors.teal.shade100,
+              color: Colors.blueGrey.shade100,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Total:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('R\$ ${total.toStringAsFixed(2)}', style: const TextStyle(fontSize: 20)),
+                  Text('Total: R\$ ${total.toStringAsFixed(2)}',
+                      style:
+                          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  ElevatedButton(
+                    onPressed: limparCarrinho,
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: const Text('Limpar Carrinho'),
+                  ),
                 ],
               ),
             ),
