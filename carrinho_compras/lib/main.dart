@@ -129,7 +129,8 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(produto.nome,
-                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                         Image.network(produto.imagemUrl,
                             height: 50, fit: BoxFit.cover),
                         Text('R\$ ${produto.preco.toStringAsFixed(2)}'),
@@ -162,11 +163,12 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Total: R\$ ${total.toStringAsFixed(2)}',
-                      style:
-                          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
                   ElevatedButton(
                     onPressed: limparCarrinho,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
                     child: const Text('Limpar Carrinho'),
                   ),
                 ],
