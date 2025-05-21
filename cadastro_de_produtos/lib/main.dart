@@ -1,5 +1,6 @@
 // main.dart
 import 'package:flutter/material.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -12,6 +13,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cadastro de Produtos',
       home: TelaCadastro(),
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.black,
+          centerTitle: true,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.yellow,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -119,9 +137,11 @@ class _TelaCadastroState extends State<TelaCadastro> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget.produtoEditado != null
-              ? 'Editar Produto'
-              : 'Cadastro de Produto')),
+        title: Text(widget.produtoEditado != null
+            ? 'Editar Produto'
+            : 'Cadastro de Produto'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -135,6 +155,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   validator: (value) =>
                       value!.isEmpty ? 'Campo obrigatório' : null,
                 ),
+                SizedBox(height: 10),
                 TextFormField(
                   controller: _precoCompraController,
                   decoration: InputDecoration(labelText: 'Preço de Compra'),
@@ -142,6 +163,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   validator: (value) =>
                       value!.isEmpty ? 'Campo obrigatório' : null,
                 ),
+                SizedBox(height: 10),
                 TextFormField(
                   controller: _precoVendaController,
                   decoration: InputDecoration(labelText: 'Preço de Venda'),
@@ -149,6 +171,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   validator: (value) =>
                       value!.isEmpty ? 'Campo obrigatório' : null,
                 ),
+                SizedBox(height: 10),
                 TextFormField(
                   controller: _quantidadeController,
                   decoration: InputDecoration(labelText: 'Quantidade'),
@@ -156,12 +179,14 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   validator: (value) =>
                       value!.isEmpty ? 'Campo obrigatório' : null,
                 ),
+                SizedBox(height: 10),
                 TextFormField(
                   controller: _descricaoController,
                   decoration: InputDecoration(labelText: 'Descrição'),
                   validator: (value) =>
                       value!.isEmpty ? 'Campo obrigatório' : null,
                 ),
+                SizedBox(height: 10),
                 DropdownButtonFormField(
                   value: _categoria,
                   items: ['Eletrônicos', 'Roupas', 'Alimentos', 'Outros']
@@ -170,6 +195,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   onChanged: (value) => setState(() => _categoria = value!),
                   decoration: InputDecoration(labelText: 'Categoria'),
                 ),
+                SizedBox(height: 10),
                 TextFormField(
                   controller: _imagemController,
                   decoration: InputDecoration(labelText: 'URL da Imagem'),
@@ -249,7 +275,17 @@ class TelaListaProdutos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Lista de Produtos')),
+      appBar: AppBar(
+        title: Text('Lista de Produtos'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TelaCadastro()),
+          ),
+        ),
+      ),
       body: Column(
         children: [
           Padding(
@@ -263,12 +299,15 @@ class TelaListaProdutos extends StatelessWidget {
               itemBuilder: (context, index) {
                 final produto = produtos[index];
                 return ListTile(
-                  leading: Image.network(
-                    produto.imagemUrl,
-                    width: 50,
-                    height: 50,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.broken_image),
+                  leading: ClipOval(
+                    child: Image.network(
+                      produto.imagemUrl,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(Icons.broken_image),
+                    ),
                   ),
                   title: Text(produto.nome),
                   subtitle:
@@ -311,18 +350,32 @@ class TelaDetalhesProduto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Detalhes do Produto')),
+      appBar: AppBar(
+        title: Text('Detalhes do Produto'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TelaListaProdutos()),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.network(
-                produto.imagemUrl,
-                height: 200,
-                errorBuilder: (context, error, stackTrace) =>
-                    Icon(Icons.broken_image, size: 100),
+              child: ClipOval(
+                child: Image.network(
+                  produto.imagemUrl,
+                  height: 200,
+                  width: 200,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.broken_image, size: 100),
+                ),
               ),
             ),
             SizedBox(height: 16),
