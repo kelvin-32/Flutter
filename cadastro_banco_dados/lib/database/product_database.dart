@@ -44,7 +44,11 @@ class ProductDatabase {
     );
   }
 
-  insertProduct(ProdutoModel produto) {}
+  Future<int> insertProduct(ProdutoModel productModel) async {
+    final db = await database;
+    final map = productModel.toMap();
+    return await db.insert('produtos', produto.toMap());
+  }
 
   findAllProducts() {}
 }
